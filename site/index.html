@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Back Connor Willis</title>
+<!-- DRAFT: remove this robots line when Connor approves the page and sets "draft": false in config.json -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Put your brand on Connor Willis's race car. Connor is a 19-year-old American racing single-seaters in the UK's GB4 Championship, and this page funds his road to Formula One.">
+<meta property="og:title" content="Your brand, on Connor's race car.">
+<meta property="og:description" content="Sponsorship spots on a Formula 4 car, priced by size and visibility. Goal: $1,000,000.">
+<meta property="og:image" content="assets/img/track-a.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d8141e'/%3E%3Ctext x='32' y='43' font-family='Arial,Helvetica,sans-serif' font-weight='700' font-size='30' fill='white' text-anchor='middle'%3E99%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div class="draft-banner" id="draft-banner" hidden>Draft for Connor's review. Prices and details are not final yet.</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="Connor Willis Racing, back to top">
+      <img src="assets/logos/wordmark.png" alt="Connor Willis Racing">
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#car">The car</a>
+      <a href="#spots">Spots</a>
+      <a href="#how">How it works</a>
+      <a href="#money">The budget</a>
+      <a href="#connor">Connor</a>
+    </nav>
+    <div class="nav-right">
+      <div class="seg" role="group" aria-label="Currency">
+        <button type="button" data-cur="USD" aria-pressed="true">$</button>
+        <button type="button" data-cur="GBP" aria-pressed="false">£</button>
+      </div>
+      <a class="btn btn-dark btn-sm" href="#spots">Get a spot</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="wrap hero">
+    <p class="eyebrow">Sponsorship · GB4 Championship · Car 99</p>
+    <h1>Your brand, on Connor's race car.</h1>
+    <p class="lede">Connor Willis is a 19-year-old American racing single-seaters in the UK. Your logo rides on his car at every round, in every livestream and in every photo, while he climbs the ladder toward Formula One.</p>
+    <div class="funding" aria-live="polite">
+      <div class="funding-top">
+        <div class="funding-raised"><span id="raised">$0</span><small>raised</small></div>
+        <div class="funding-goal">goal <b id="goal">$1,000,000</b></div>
+      </div>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><i></i></div>
+      <div class="funding-meta" id="funding-meta">20 spots on the car and the driver kit, priced by size and visibility.</div>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#spots">Pick a spot</a>
+      <a class="btn btn-ghost" href="#how">How it works</a>
+    </div>
+    <p class="hero-note">No payment on this page. Pick a spot, send your details, and Connor's team replies with a simple agreement.</p>
+  </section>
+
+  <section id="car" class="wrap stage-section">
+    <div class="stage-tools">
+      <div class="seg" role="group" aria-label="View">
+        <button type="button" data-view="spots" aria-pressed="true">Spots</button>
+        <button type="button" data-view="clean" aria-pressed="false">Clean look</button>
+      </div>
+      <span class="drag-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2M21 12a9 9 0 0 1-15.5 6.2"/><path d="M18 3v3.5h-3.5M6 21v-3.5h3.5"/></svg>
+        Drag to spin the car. Tap a number for details.
+      </span>
+    </div>
+    <div class="stage" id="stage">
+      <div class="stage-floor" aria-hidden="true"></div>
+      <canvas id="car-canvas" aria-label="Interactive 3D view of Connor's car with numbered sponsorship spots"></canvas>
+      <div id="pins" aria-label="Sponsorship spots on the car"></div>
+      <div class="stage-loading" id="stage-loading"><div class="spinner" aria-hidden="true"></div><span>Loading the car</span></div>
+    </div>
+    <div class="stage-legend">
+      <span><i class="dot dot-red"></i>Available</span>
+      <span><i class="dot dot-ink"></i>Taken</span>
+      <span class="muted" id="model-note">3D stand-in for the Tatuus MSV GB4-025. Spot sizes are approximate.</span>
+    </div>
+    <div id="spot-pop" class="pop" role="dialog" aria-label="Spot details"></div>
+
+    <p class="embed-cta"><a class="btn btn-primary" href="index.html" target="_top">See every spot and price</a></p>
+
+    <div class="kit">
+      <h3>Driver kit</h3>
+      <p class="muted">The parts of the programme that are in every interview, every podium photo and every onboard.</p>
+      <div class="kit-grid" id="kit"></div>
+    </div>
+  </section>
+
+  <section id="spots" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Every spot</p>
+        <h2>Priced by size and by where the cameras look.</h2>
+        <p>The rear wing and the sidepods carry the most screen time. The halo and the nose top sit in the onboard camera. Asking prices are per season. Bundles and multi-year deals get a better rate, so ask.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="spots" id="spot-table">
+          <thead><tr><th>#</th><th>Spot</th><th>Size</th><th>Approx. print</th><th>Status</th><th class="right">Price</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="table-note" id="table-note"></p>
+    </div>
+  </section>
+
+  <section id="how" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2>Three steps from this page to the grid.</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><h3>Pick your spot</h3><p>Choose a place on the car or on the driver kit. Bigger surfaces cost more because they get more camera time. If you want several, say so and the team prices the bundle.</p></div>
+        <div class="step"><h3>Agree the deal</h3><p>Connor's team confirms the spot is still open, then sends a one-page partnership agreement and an invoice. Nothing is charged on this page and nothing is printed until the agreement is signed.</p></div>
+        <div class="step"><h3>Your logo rides along</h3><p>Your artwork is printed as high-quality vinyl and applied by the team. It stays on the car for the agreed period, at every round, in every livestream and in every photo Connor posts.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="money" class="section">
+    <div class="wrap two-col">
+      <div>
+        <div class="section-head">
+          <p class="eyebrow">The budget</p>
+          <h2>What $1,000,000 buys.</h2>
+          <p>A fully funded run at the next rungs of the single-seater ladder. Junior racing is paid for by the driver's partners, and the drivers who make it are the ones who never have to skip a test day or a race weekend. Connor's team confirms the exact allocation with every partner before anything is signed.</p>
+        </div>
+        <ul class="list">
+          <li><b>Race programme</b><span>Entry fees, engineering, mechanics and data support for full seasons on the ladder.</span></li>
+          <li><b>Testing</b><span>Pre-season and in-season test days. In junior formulas, laps are the fastest route to lap time.</span></li>
+          <li><b>Tyres and consumables</b><span>Fresh rubber for every weekend, plus brakes, fuel and fluids.</span></li>
+          <li><b>Travel and logistics</b><span>Transport for the car, the crew and the driver to every round of the calendar.</span></li>
+          <li><b>Crash fund and spares</b><span>One incident can end a weekend. A funded spares package keeps the season on track.</span></li>
+          <li><b>Driver development</b><span>Coaching, simulator time and physical preparation between rounds.</span></li>
+        </ul>
+      </div>
+      <aside class="spec">
+        <h3>The car right now</h3>
+        <p class="sub">Tatuus MSV GB4-025, run by Hillspeed</p>
+        <dl>
+          <dt>Series</dt><dd>GB4 Championship, run by MotorSport Vision in the UK</dd>
+          <dt>Season</dt><dd>7 rounds, 21 races, April to September</dd>
+          <dt>Chassis</dt><dd>Tatuus MSV GB4-025 with halo, the car raced in GB3 from 2022 to 2024</dd>
+          <dt>Engine</dt><dd>2.0-litre four-cylinder, naturally aspirated, built by Mountune</dd>
+          <dt>Aero</dt><dd>Single-plane front and rear wings, overhead airbox</dd>
+          <dt>Number</dt><dd>99</dd>
+          <dt>Coverage</dt><dd>Every race streamed live on MSV TV's YouTube channel</dd>
+        </dl>
+        <img src="assets/img/garage.jpg" alt="Connor's number 99 Hillspeed car in the garage" loading="lazy">
+        <p class="src">Car details from MotorSport Vision and GB4. The 3D model above is a stand-in; the real spot map is agreed on the actual car before printing.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="connor" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">The driver</p>
+        <h2>Who is Connor Willis?</h2>
+      </div>
+      <div class="about">
+        <div class="about-text">
+          <p class="quote">"Appreciate the challenges and work tirelessly, optimizing every opportunity with faith in the process."</p>
+          <p>Connor is from Naperville, Illinois. He started karting at 12, won his first car race in Spec Miata from pole, and left high school early to move 4,000 miles to the UK, where the single-seater ladder to Formula One actually runs.</p>
+          <p>In 2025 he finished seventh in the United Formula Ford Championship and made the Grand Final of the Walter Hayes Trophy. For 2026 he stepped up to GB4, the British Formula 4-spec championship, with Hillspeed, a Derbyshire team with more than 50 years of race-winning history.</p>
+          <p>His rookie GB4 season brought six straight top-10 finishes to open the year, a first win at Silverstone in August, and a podium in the final race of the season at Brands Hatch. He finished ninth in the championship, and Hillspeed finished runner-up in the teams' standings.</p>
+          <div class="stat-row">
+            <div class="stat"><b>9th</b><span>2026 GB4 championship</span></div>
+            <div class="stat"><b>221</b><span>points</span></div>
+            <div class="stat"><b>1</b><span>win, Silverstone</span></div>
+            <div class="stat"><b>99</b><span>car number</span></div>
+          </div>
+          <p class="muted" style="font-size:14px">Final 2026 standings from gb-4.net.</p>
+        </div>
+        <div class="photos">
+          <img class="wide" src="assets/img/track-a.jpg" alt="Connor Willis racing the number 99 Hillspeed GB4 car" loading="lazy">
+          <img src="assets/img/laugh.jpg" alt="Connor Willis in his race suit" loading="lazy">
+          <img src="assets/img/cockpit.jpg" alt="Connor in the cockpit with his helmet on" loading="lazy">
+        </div>
+      </div>
+      <ol class="timeline" aria-label="Career timeline">
+        <li><b>2019</b>Starts karting at 12 and wins his first race against experienced drivers.</li>
+        <li><b>2021</b>Car racing debut in Spec Miata. Pole and a win first time out.</li>
+        <li><b>2023</b>First single-seater race in FRP F1600, then a step up to Formula Ford.</li>
+        <li><b>2025</b>Moves to the UK. 7th in United Formula Ford, 10th in the Walter Hayes Trophy Grand Final, 9th at the Formula Ford Festival.</li>
+        <li class="now"><b>2026</b>GB4 with Hillspeed, car 99. First win at Silverstone, podium in the Brands Hatch finale, 9th in the championship.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="partners" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Already on board</p>
+        <h2>Founding partners.</h2>
+      </div>
+      <div class="partners" id="partner-logos"></div>
+    </div>
+  </section>
+
+  <section id="faq" class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2>Straight answers.</h2>
+      </div>
+      <div class="faq">
+        <details open><summary>Is this real?</summary><p>Yes. Connor races the number 99 Hillspeed car in the GB4 Championship. His results are on the official GB4 site and his own site, and every race is streamed live. The car on this page is a 3D stand-in used to show where logos go; the real placement is agreed on the actual car before anything is printed.</p></details>
+        <details><summary>What do I get?</summary><p>Your logo on the car or the driver kit for the agreed period, a place on this page and on Connor's website, and mentions across his channels when your artwork goes on. Larger packages can add team kit and race-weekend access, agreed case by case.</p></details>
+        <details><summary>How does payment work?</summary><p>Pick a spot and send your details. Connor's team confirms it is still open and sends a short partnership agreement and an invoice. Nothing is charged on this page.</p></details>
+        <details><summary>Can I take more than one spot?</summary><p>Yes. Bundles and multi-year deals are priced lower per spot than the list. Say what you have in mind in the message box.</p></details>
+        <details><summary>Why are the prices what they are?</summary><p>They reflect how much of the car, and of the TV picture, each surface takes up. The rear wing and the sidepods are the most visible on a single-seater, the halo and nose top are in every onboard shot, and the smaller surfaces are priced accordingly. The full list adds up to the season goal.</p></details>
+        <details><summary>What if Connor moves up a category?</summary><p>That is the plan. If he steps up during your term, your spot carries over to the new car at the same placement.</p></details>
+        <details><summary>Can a smaller business join?</summary><p>Yes. The driver kit and the smaller surfaces exist for exactly that. If none of the list fits, write in and say what budget you have.</p></details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <b>Connor Willis Racing</b><br>
+        <span id="foot-contact">Sponsorship enquiries: use any Claim button above.</span>
+      </div>
+      <div class="foot-links" id="foot-links"></div>
+    </div>
+    <p class="credits" id="credits"></p>
+  </div>
+</footer>
+
+<dialog id="claim-dialog" aria-labelledby="dlg-title">
+  <div class="dlg" id="dlg">
+    <div class="dlg-head">
+      <div>
+        <h3 id="dlg-title">Claim a spot</h3>
+        <p class="dlg-sub" id="dlg-sub"></p>
+      </div>
+      <button type="button" class="close" id="dlg-close" aria-label="Close">×</button>
+    </div>
+    <form id="claim-form" novalidate>
+      <div class="grid-2">
+        <div class="field"><label for="f-company">Company or brand</label><input id="f-company" name="company" required autocomplete="organization"></div>
+        <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" required autocomplete="name"></div>
+      </div>
+      <div class="grid-2" style="margin-top:12px">
+        <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+        <div class="field"><label for="f-web">Website (optional)</label><input id="f-web" name="website" type="url" autocomplete="url" placeholder="https://"></div>
+      </div>
+      <div class="field" style="margin-top:12px"><label for="f-msg">Message (optional)</label><textarea id="f-msg" name="message" rows="3" placeholder="Term, bundle, questions"></textarea></div>
+      <div class="dlg-foot" style="margin-top:16px">
+        <span class="note">No payment here. You will hear back from Connor's team.</span>
+        <button type="submit" class="btn btn-primary">Send request</button>
+      </div>
+    </form>
+    <div class="dlg-done">
+      <p id="done-text"></p>
+      <div class="copybox" id="done-copy" hidden></div>
+      <div class="dlg-foot"><span></span><button type="button" class="btn btn-ghost" id="dlg-done-close">Done</button></div>
+    </div>
+  </div>
+</dialog>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

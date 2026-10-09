@@ -1,0 +1,11 @@
+# Private research. Never commit: it lists third-party contacts.
+sponsor-prospecting/
+
+# Build and runtime output
+node_modules/
+data/
+tools/source/
+tools/_stage.glb
+site/assets/wrapped/
+site/config.artifact.json
+.DS_Store
