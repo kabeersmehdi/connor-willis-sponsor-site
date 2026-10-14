@@ -15,7 +15,8 @@
 
 ## Software
 - three.js (MIT), loaded from jsDelivr. Draco decoder (Apache 2.0) shipped in `site/assets/draco/`.
-- Fonts: Barlow and Barlow Semi Condensed (SIL Open Font License) via Google Fonts.
+- Fonts: Racing Sans One and Inter (SIL Open Font License), subset to Latin and served from `site/assets/fonts/`.
+- Design system (colours, type scale, button and card shapes): exported from Relume on 14 October 2026 for the Connor Willis Sponsorship Programme. The React components in that export were used as layout references only; the page is hand-written HTML and CSS.
 - Model pipeline: glTF Transform (MIT).
 
 ## Facts used in the copy (checked 16 September 2026; season results updated 9 October 2026)

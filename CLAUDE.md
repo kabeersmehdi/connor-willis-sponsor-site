@@ -1,6 +1,6 @@
 # Instructions for Claude: Connor Willis sponsorship site
 
-This repo is Connor Willis's sponsorship page: a single static web page with a spinnable 3D race car, 20 numbered sponsorship spots, a price table, a claim form, his bio and partners. Connor races car 99 for Hillspeed in the UK's GB4 Championship and is raising $1,000,000 in partnerships.
+This repo is Connor Willis's sponsorship page: a single static web page with a spinnable 3D race car, 20 numbered sponsorship spots, three proposed packages that bundle spots, a price table, a claim form, his bio and partners. Connor races car 99 for Hillspeed in the UK's GB4 Championship and is raising $1,000,000 in partnerships.
 
 Live page: https://kabeersmehdi.github.io/connor-willis-sponsor-site/
 The person asking you for changes is usually Connor or his friend Kabeer. Neither needs to read code, so describe changes in plain words and do the edits yourself.
@@ -9,9 +9,10 @@ The person asking you for changes is usually Connor or his friend Kabeer. Neithe
 
 | What | File |
 |---|---|
-| Prices, spot names and sizes, sold or available, sponsor names and logos, goal, contact email, social links, car colours, draft switch | `site/config.json` |
+| Prices, spot names and sizes, sold or available, packages, sponsor names and logos, goal, contact email, social links, car colours, draft switch | `site/config.json` |
 | All page wording (headline, bio, budget, FAQ, timeline, stats) | `site/index.html` |
 | Design (colours, fonts, spacing) | `site/styles.css` |
+| Fonts (Racing Sans One for headings, Inter for text), served from the site itself | `site/assets/fonts/` |
 | 3D scene, decals, pins, claim form logic | `site/app.js` |
 | Photos and logos | `site/assets/img/`, `site/assets/logos/` |
 | Squarespace embed snippet | `squarespace/embed-code.html` |
@@ -23,6 +24,8 @@ The person asking you for changes is usually Connor or his friend Kabeer. Neithe
 
 - **"Mark spot N as sold to Company X for $Y."** In `site/config.json`, on the spot with that `id`: set `"status": "taken"`, `"holder": "Company X"`, `"url"` to their website if given, and `"paid": Y` if Y differs from `price`. If a logo file is provided, save it as a PNG with a transparent background in `site/assets/logos/` and set `"logo": "assets/logos/<file>.png"`. The raised total, progress bar, table, popover and the panel on the car all update from this. Nothing else needs editing.
 - **"Change a price."** Edit that spot's `price` (whole US dollars, no commas). The page shows the sum of all prices in the note under the table; tell the person if the total no longer matches `site.goal`.
+- **"Approve the packages" / "the packages are final."** Set `packages.draft` to `false` in `site/config.json`. The "Proposed" labels and the proposal note under the cards disappear. Until then every package card says Proposed.
+- **"Change a package" (price, name, what it includes).** Edit that tier under `packages.tiers` in config.json. `spots` is the list of spot ids it bundles (the card lists them and works out the list value and the saving by itself); `extras` are the non-spot inclusions, one line each; `featured` draws the yellow border. Keep a package price below the sum of its spots' prices, or the card shows no saving. When a package sells, mark each of its spots as taken as above; a package whose spots are partly taken shows "Partly taken, ask" instead of a Claim button.
 - **"Add a partner logo to Founding partners."** Add `{ "name": "...", "logo": "assets/logos/<file>.png" }` to `partners` in config.json.
 - **"Set the contact email."** `site.contactEmail` in config.json. Claim requests then open the visitor's email app addressed to it.
 - **"Collect claims in a form inbox."** Put a Formspree (or similar) endpoint URL in `site.claimEndpoint`. The page then POSTs JSON there.
@@ -50,4 +53,5 @@ Commit and push to `main`. The GitHub Action in `.github/workflows/pages.yml` pu
 - Facts about Connor (results, standings, history) must come from a source listed in `CREDITS.md`, with a date. Do not invent results, sponsors or numbers.
 - The page takes no payments. Keep it that way; deals are agreed and invoiced by Connor's team.
 - Keep the wording plain and specific. No em dashes.
+- The look follows the Relume design system Kabeer exported on 14 October 2026: black sections with white text and the yellow accent (`#fbbf24`), a white nav and footer, Racing Sans One uppercase headings, Inter body text, pill buttons and outlined cards with 8px corners. The colour and type values are CSS variables at the top of `site/styles.css`; change them there rather than in individual rules. Do not add testimonials, viewer numbers or results that are not in `CREDITS.md`.
 - `sponsor-prospecting/` is not part of this repo and must never be committed: it lists private contacts.
