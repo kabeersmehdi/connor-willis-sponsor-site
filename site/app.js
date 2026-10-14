@@ -110,7 +110,7 @@ function renderKit() {
 
 function renderPartners() {
   const p = state.cfg.partners || [];
-  $('#partner-logos').innerHTML = p.map((x) => `<img src="${esc(x.logo)}" alt="${esc(x.name)}" title="${esc(x.name)}" loading="lazy">`).join('')
+  $('#partner-logos').innerHTML = p.map((x) => `<span class="tile"><img src="${esc(x.logo)}" alt="${esc(x.name)}" title="${esc(x.name)}" loading="lazy"></span>`).join('')
     + `<a class="you" href="#spots">Your logo here</a>`;
 }
 
@@ -121,6 +121,42 @@ function renderFooter() {
   const email = state.cfg.site.contactEmail;
   if (email) $('#foot-contact').innerHTML = `Sponsorship enquiries: <a href="mailto:${esc(email)}">${esc(email)}</a>`;
   $('#credits').textContent = `Photos: Connor Willis Racing. ${state.cfg.model.credit} Studio lighting: Poly Haven (CC0). Built with three.js.`;
+  const cp = $('#copyright'); if (cp) cp.textContent = `\u00a9 ${new Date().getFullYear()} Connor Willis Racing.`;
+}
+
+/* Packages: proposed bundles of spots, defined in config.packages. The list value is computed from the spots they include. */
+function packageSpots(t) {
+  return (t.spots || []).map((id) => state.cfg.spots.find((x) => x.id === id)).filter(Boolean);
+}
+function packageAsSpot(t) {
+  const sp = packageSpots(t);
+  return { id: t.id, name: `${t.name} package`, location: sp.map((x) => `${x.id} ${x.name}`).join(', '), dims: `${sp.length} spots`, price: t.price, isPackage: true, status: 'available' };
+}
+function renderPackages() {
+  const P = state.cfg.packages, grid = $('#pkg-grid'), foot = $('#pkg-foot');
+  if (!grid) return;
+  if (!P || !P.tiers || !P.tiers.length) { grid.innerHTML = ''; foot.innerHTML = ''; $('#packages').hidden = true; return; }
+  $('#packages').hidden = false;
+  const draft = P.draft !== false;
+  grid.innerHTML = P.tiers.map((t) => {
+    const sp = packageSpots(t);
+    const list = sp.reduce((a, x) => a + x.price, 0);
+    const sold = sp.some(isTaken);
+    const items = sp.map((x) => `<li><span><b>${x.id}. ${esc(x.name)}</b> <span class="muted">${esc(x.location.replace(/^Driver kit, /, ''))}</span></span></li>`)
+      .concat((t.extras || []).map((e) => `<li>${esc(e)}</li>`)).join('');
+    return `
+    <article class="pkg${t.featured ? ' is-featured' : ''}" data-pkg="${esc(t.id)}">
+      ${draft ? '<span class="chip-draft">Proposed</span>' : ''}
+      <div><div class="pkg-tier">${esc(t.name)}</div><div class="pkg-tag">${esc(t.tagline || '')}</div></div>
+      <div class="pkg-price">${money(t.price)}<small>per season</small></div>
+      <ul>${items}</ul>
+      ${list > t.price ? `<p class="pkg-value">List value of the spots: ${money(list)}. Saves ${money(list - t.price)}.</p>` : ''}
+      ${sold ? '<span class="chip chip-taken" style="align-self:center">Partly taken, ask</span>' : `<button type="button" class="btn btn-primary btn-block" data-claim="${esc(t.id)}">Claim the ${esc(t.name)} package</button>`}
+    </article>`;
+  }).join('');
+  foot.innerHTML = draft
+    ? `<span class="chip-draft" style="align-self:center">Proposed</span><p>These packages are proposals. Inclusions, access and prices are confirmed by Connor's team before anything is signed. Want a different mix? Ask, and the team prices it.</p>`
+    : `<p>Want a different mix? Pick the spots you want from the list below and the team prices the bundle.</p>`;
 }
 
 function renderDraft() {
@@ -128,25 +164,32 @@ function renderDraft() {
   if (banner) banner.hidden = state.cfg.site.draft === false;
 }
 
-function renderAll() { renderDraft(); renderFunding(); renderTable(); renderKit(); renderPartners(); renderFooter(); }
+function renderAll() { renderDraft(); renderFunding(); renderPackages(); renderTable(); renderKit(); renderPartners(); renderFooter(); }
 
 /* ---------------------------------------------------------------- currency */
 function setCurrency(cur) {
   state.currency = cur;
   $$('[data-cur]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cur === cur)));
   try { localStorage.setItem('cwr-currency', cur); } catch (e) { /* ignore */ }
-  renderFunding(); renderTable(); renderKit();
+  renderFunding(); renderPackages(); renderTable(); renderKit();
   if (state.claimSpot) fillDialogHead(state.claimSpot);
 }
 
 /* ------------------------------------------------------------------- claim */
 const dialog = $('#claim-dialog');
 function fillDialogHead(s) {
-  $('#dlg-title').textContent = `Claim spot ${s.id}: ${s.name}`;
-  $('#dlg-sub').textContent = `${s.location} · ${s.dims} · ${money(s.price)} per season`;
+  $('#dlg-title').textContent = s.isPackage ? `Claim the ${s.name}` : `Claim spot ${s.id}: ${s.name}`;
+  $('#dlg-sub').textContent = s.isPackage
+    ? `${s.dims}: ${s.location} · ${money(s.price)} per season`
+    : `${s.location} · ${s.dims} · ${money(s.price)} per season`;
+}
+function findClaimable(id) {
+  if (typeof id === 'number') return state.cfg.spots.find((x) => x.id === id);
+  const t = ((state.cfg.packages || {}).tiers || []).find((x) => x.id === id);
+  return t ? packageAsSpot(t) : null;
 }
 function openClaim(id) {
-  const s = state.cfg.spots.find((x) => x.id === id);
+  const s = findClaimable(id);
   if (!s || isTaken(s)) return;
   state.claimSpot = s;
   fillDialogHead(s);
@@ -159,7 +202,7 @@ function closeClaim() { if (dialog.open) dialog.close(); state.claimSpot = null;
 
 function composeMessage(s, f) {
   return [
-    `Sponsorship request: spot ${s.id}, ${s.name} (${s.location})`,
+    s.isPackage ? `Sponsorship request: ${s.name} (spots ${s.location})` : `Sponsorship request: spot ${s.id}, ${s.name} (${s.location})`,
     `Asking price: ${money(s.price)} per season`,
     ``,
     `Company: ${f.company}`,
@@ -193,9 +236,9 @@ async function submitClaim(ev) {
   btn.disabled = false; btn.textContent = 'Send request';
   const doneText = $('#done-text'), copy = $('#done-copy');
   if (done) {
-    doneText.textContent = `Request sent for spot ${s.id}, ${s.name}. Connor's team will reply to ${f.email}.`;
+    doneText.textContent = `Request sent for ${s.isPackage ? s.name : `spot ${s.id}, ${s.name}`}. Connor's team will reply to ${f.email}.`;
   } else if (site.contactEmail) {
-    const subject = encodeURIComponent(`Sponsorship request: spot ${s.id}, ${s.name}`);
+    const subject = encodeURIComponent(s.isPackage ? `Sponsorship request: ${s.name}` : `Sponsorship request: spot ${s.id}, ${s.name}`);
     const body = encodeURIComponent(text);
     window.location.href = `mailto:${site.contactEmail}?subject=${subject}&body=${body}`;
     doneText.innerHTML = `Your email app should open with the request ready to send to <b>${esc(site.contactEmail)}</b>. If it did not, copy the text below and send it yourself.`;
@@ -292,15 +335,15 @@ function decalTexture(renderer, kind, spot, w, h) {
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const g = c.getContext('2d');
   const pad = Math.round(H * 0.08), r = Math.round(H * 0.16);
-  const font = (wt, px) => `${wt} ${px}px "Barlow Semi Condensed", "Barlow", Arial, sans-serif`;
+  const font = (wt, px) => `${wt} ${px}px "Racing Sans One", "Inter", Arial, sans-serif`;
   g.textAlign = 'center'; g.textBaseline = 'middle';
   if (kind === 'available') {
     g.strokeStyle = 'rgba(255,255,255,0.9)'; g.lineWidth = Math.max(5, H * 0.04); g.setLineDash([H * 0.14, H * 0.09]);
     roundRect(g, pad, pad, W - 2 * pad, H - 2 * pad, r); g.stroke(); g.setLineDash([]);
     g.fillStyle = 'rgba(255,255,255,0.10)'; roundRect(g, pad, pad, W - 2 * pad, H - 2 * pad, r); g.fill();
     const cr = H * 0.17, cx = pad + cr * 1.6, cy = H / 2;
-    g.fillStyle = '#ffffff'; g.beginPath(); g.arc(cx, cy, cr, 0, Math.PI * 2); g.fill();
-    g.fillStyle = '#d8141e'; g.font = font(700, cr * 1.35); g.fillText(String(spot.id), cx, cy + cr * 0.06);
+    g.fillStyle = '#fbbf24'; g.beginPath(); g.arc(cx, cy, cr, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#000000'; g.font = font(400, cr * 1.35); g.fillText(String(spot.id), cx, cy + cr * 0.06);
     g.fillStyle = 'rgba(255,255,255,0.95)'; g.font = font(600, H * 0.3);
     try { g.letterSpacing = '0.06em'; } catch (e) { /* older browsers */ }
     g.fillText('YOUR LOGO', W / 2 + cr * 0.9, H / 2 + H * 0.02);
@@ -355,7 +398,7 @@ function loadImage(src) {
 
 async function buildDecals(T) {
   const cfg = state.cfg;
-  try { await Promise.race([document.fonts.load('700 40px "Barlow Semi Condensed"'), new Promise((r) => setTimeout(r, 1500))]); } catch (e) { /* ignore */ }
+  try { await Promise.race([document.fonts.load('400 40px "Racing Sans One"'), new Promise((r) => setTimeout(r, 1500))]); } catch (e) { /* ignore */ }
   // race number
   for (const spec of cfg.model.numberDecals || []) {
     const tex = decalTexture(T.renderer, 'number', { number: cfg.livery.number }, spec.w, spec.h);
@@ -586,7 +629,7 @@ async function main() {
 
   document.addEventListener('click', (e) => {
     const claim = e.target.closest('[data-claim]');
-    if (claim) { e.preventDefault(); hidePop(); openClaim(Number(claim.dataset.claim)); return; }
+    if (claim) { e.preventDefault(); hidePop(); const raw = claim.dataset.claim; openClaim(/^\d+$/.test(raw) ? Number(raw) : raw); return; }
     const cur = e.target.closest('[data-cur]');
     if (cur) { setCurrency(cur.dataset.cur); return; }
     const view = e.target.closest('[data-view]');

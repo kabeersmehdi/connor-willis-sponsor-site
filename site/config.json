@@ -1,5 +1,5 @@
 {
-  "_comment": "Everything editable about the page lives here. Prices are asking prices in USD. When a spot sells, set status to 'taken' and fill holder, url and optionally logo and paid; the raised total and the bar update from that. Set site.draft to false (and delete the robots meta line in index.html) when Connor approves the page.",
+  "_comment": "Everything editable about the page lives here. Prices are asking prices in USD. When a spot sells, set status to 'taken' and fill holder, url and optionally logo and paid; the raised total and the bar update from that. Set site.draft to false (and delete the robots meta line in index.html) when Connor approves the page. Packages are proposed bundles of spots: while packages.draft is true the page labels them as proposals; set it to false once Connor approves the prices and inclusions.",
   "site": {
     "draft": true,
     "driver": "Connor Willis",
@@ -94,6 +94,69 @@
       "logo": "assets/logos/stellar.png"
     }
   ],
+  "packages": {
+    "draft": true,
+    "note": "Each package bundles the listed spot ids. The list value is computed from those spots, so the saving shows automatically. When a package sells, mark each of its spots as taken.",
+    "tiers": [
+      {
+        "id": "P1",
+        "name": "Bronze",
+        "tagline": "Get on the car",
+        "price": 50000,
+        "spots": [
+          13,
+          19,
+          15
+        ],
+        "extras": [
+          "Mention on Connor's channels when your artwork goes on",
+          "Your logo on this page and on connorwillisracing.com"
+        ],
+        "featured": false
+      },
+      {
+        "id": "P2",
+        "name": "Silver",
+        "tagline": "In every onboard and every interview",
+        "price": 200000,
+        "spots": [
+          3,
+          18,
+          17,
+          12
+        ],
+        "extras": [
+          "Mention on Connor's channels when your artwork goes on",
+          "Your logo on this page and on connorwillisracing.com",
+          "Race-weekend paddock access for your guests at one UK round"
+        ],
+        "featured": true
+      },
+      {
+        "id": "P3",
+        "name": "Gold",
+        "tagline": "Title partner",
+        "price": 550000,
+        "spots": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          17,
+          18
+        ],
+        "extras": [
+          "Mention on Connor's channels when your artwork goes on",
+          "Your logo on this page and on connorwillisracing.com",
+          "Race-weekend paddock access for your guests at every round",
+          "Naming on the programme: Connor Willis Racing with your brand",
+          "End-of-season delivery report with photos and coverage"
+        ],
+        "featured": false
+      }
+    ]
+  },
   "spots": [
     {
       "id": 1,
