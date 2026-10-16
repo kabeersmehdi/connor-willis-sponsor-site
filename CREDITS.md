@@ -15,6 +15,7 @@
 
 ## Software
 - three.js (MIT), loaded from jsDelivr. Draco decoder (Apache 2.0) shipped in `site/assets/draco/`.
+- GSAP 3.12 with ScrollTrigger (free for commercial use, https://gsap.com/standard-license), loaded from jsDelivr for the page entrance and scroll reveals.
 - Fonts: Barlow and Barlow Semi Condensed (SIL Open Font License) via Google Fonts.
 - Model pipeline: glTF Transform (MIT).
 

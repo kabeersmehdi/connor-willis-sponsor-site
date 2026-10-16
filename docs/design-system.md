@@ -59,8 +59,12 @@ Livery (3D car): front #D8141E, rear #131316, stripe #F4F4F6, wings #131316.
 - 3D: car.glb (CC BY stand-in), studio HDRI (CC0). Credit line in footer is mandatory.
 
 ## Motion
-- Progress bar width transition 0.8s. Pins fade 0.18s. Auto-rotate 0.45 deg per frame, paused on drag.
-- prefers-reduced-motion disables CSS transitions and smooth scroll. Open item: also stop auto-rotate.
+- GSAP 3.12 with ScrollTrigger, loaded after the content renders (site/motion.js). If it does not load, the page is complete without it.
+- Hero: one staged entrance (eyebrow, headline, lede, funding block, buttons, note), 0.5 to 0.8s, power3.out.
+- Funding bar fills from empty after the entrance.
+- Sections: headings and content blocks rise 28px and fade in as they are reached, 0.7s, staggered 0.08s, once only. The table rows, pins and popover are not animated.
+- Not used: ScrollSmoother and pinned sections. They fight anchor links and add little to a price table.
+- prefers-reduced-motion: no GSAP is loaded, CSS transitions are off, and the 3D car does not auto-rotate.
 
 ## Loading behaviour (new in this review)
 - Content renders from config.json before three.js loads. three.js loads on demand; on failure the stage shows the panning photograph and the rest of the page is unaffected.
