@@ -48,3 +48,6 @@ Strong pages lead with a number, name the deliverable, use one verb per action, 
 - Driver tier examples: https://theophilenael.com/en/partners, https://warwick.ac.uk/fac/sci/eng/meng/warwickracing/archive/evgp/packages
 - Tier critique: https://www.motorsportprospects.com/?p=20236
 - Sponsorship guidance: https://motorsportuk.org/competitors/competitor-toolkit/funding-your-future/
+
+## Chosen visual direction
+Pending designer choice. Options so far: Showroom (live), Pit wall (dark comp). A third option from the Refero shortlist is still to be added. Blocks any further styling until filled.
