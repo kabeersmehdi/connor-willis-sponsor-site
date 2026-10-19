@@ -1,0 +1,144 @@
+/* Mockup 2, "Neon night race". Loaded only with ?theme=night, on top of styles.css. */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&display=swap');
+
+:root {
+  --bg: #07070b;
+  --bg-2: #0f1018;
+  --bg-3: #1b1c28;
+  --ink: #f2f3f7;
+  --ink-2: #c4c6d2;
+  --muted: #9093a6;
+  --line: #22243a;
+  --line-2: #33365a;
+  --red: #ff2a3d;
+  --red-2: #ff5a69;
+  --red-soft: #2a0c13;
+  --red-fill: #d6102a;
+  --cyan: #22e4ff;
+  --glow-red: 0 0 18px rgba(255, 42, 61, .55);
+  --glow-cyan: 0 0 18px rgba(34, 228, 255, .45);
+  --shadow: 0 0 0 1px var(--line), 0 18px 40px rgba(0, 0, 0, .5);
+  --font-display: 'Chakra Petch', 'Barlow Semi Condensed', system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(900px 500px at 15% -10%, rgba(255, 42, 61, .16), transparent 60%),
+    radial-gradient(800px 500px at 100% 10%, rgba(34, 228, 255, .10), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+}
+:focus-visible { outline-color: var(--cyan); }
+
+h1, h2 { text-transform: uppercase; letter-spacing: .01em; }
+.hero h1 { text-shadow: 0 0 28px rgba(255, 42, 61, .45); }
+.eyebrow { color: var(--cyan); text-shadow: var(--glow-cyan); }
+
+/* Buttons */
+.btn-primary { background: var(--red-fill); box-shadow: var(--glow-red); }
+.btn-primary:hover { background: #b80d22; }
+.btn-dark { background: transparent; color: var(--cyan); border-color: var(--cyan); box-shadow: inset 0 0 10px rgba(34, 228, 255, .25), var(--glow-cyan); }
+.btn-dark:hover { background: rgba(34, 228, 255, .12); }
+.btn-ghost { border-color: var(--line-2); color: var(--ink); }
+.btn-ghost:hover { background: var(--bg-3); }
+
+/* Nav */
+.nav { background: rgba(7, 7, 11, .78); border-bottom-color: var(--line); }
+.brand img { filter: invert(1) hue-rotate(180deg) brightness(1.1); }
+.seg { background: var(--bg-2); border-color: var(--line-2); }
+.seg button[aria-pressed="true"] { background: var(--cyan); color: #04121a; box-shadow: var(--glow-cyan); }
+
+/* Funding */
+.funding-raised { text-shadow: var(--glow-red); }
+.bar { background: var(--bg-3); }
+.bar > i { background: linear-gradient(90deg, var(--red), var(--cyan)); box-shadow: 0 0 14px rgba(34, 228, 255, .6); }
+
+/* Stage */
+.stage { background: radial-gradient(120% 90% at 50% 35%, #1a1b2a 0%, #0d0e16 55%, #050508 100%); border-color: var(--line-2); box-shadow: inset 0 -60px 120px rgba(255, 42, 61, .10), 0 0 0 1px rgba(34, 228, 255, .08); }
+.stage-floor { background: radial-gradient(50% 50% at 50% 50%, rgba(34, 228, 255, .22), rgba(34, 228, 255, 0) 70%); }
+.stage-loading { background: rgba(7, 7, 11, .6); }
+.pin { border-color: #07070b; }
+.pin.is-available { background: var(--red-fill); box-shadow: 0 0 0 2px rgba(255, 42, 61, .35), var(--glow-red); }
+.pin.is-taken { background: var(--bg-3); border-color: var(--line-2); }
+.dot-ink { background: var(--bg-3); box-shadow: 0 0 0 1px var(--line-2); }
+.pop { background: var(--bg-2); border-color: var(--line-2); }
+
+/* Cards and panels */
+.kit-card, .step, .table-wrap { background: var(--bg-2); border-color: var(--line); }
+.kit-card:hover, .step:hover { border-color: var(--line-2); box-shadow: 0 0 0 1px rgba(255, 42, 61, .25), 0 12px 30px rgba(0, 0, 0, .45); }
+.step::before { background: var(--red-fill); box-shadow: var(--glow-red); }
+.spec { background: var(--bg-2); border-color: var(--line); }
+.price { color: var(--ink); }
+
+/* Table */
+table.spots th { background: var(--bg-3); color: var(--muted); }
+table.spots td.num { color: var(--cyan); }
+table.spots tr:hover td { background: rgba(255, 255, 255, .02); }
+.chip-size { background: transparent; color: var(--ink-2); border-color: var(--line-2); }
+.chip-open { color: #ff8a95; background: var(--red-soft); border-color: rgba(255, 42, 61, .45); }
+.chip-taken { background: var(--bg-3); color: var(--ink-2); border-color: var(--line-2); }
+
+/* Bio, timeline, stats */
+.about-text .quote { border-left-color: var(--cyan); }
+.timeline li.now { border-top-color: var(--red); box-shadow: 0 -6px 14px -8px rgba(255, 42, 61, .9); }
+.stat b { color: var(--ink); }
+
+/* Partners: logos are dark artwork, so they sit on light plates */
+.partners img { background: #f2f3f7; padding: 8px 12px; border-radius: 10px; height: 60px; }
+.partners .you { border-color: var(--line-2); }
+.partners .you:hover { color: var(--cyan); border-color: var(--cyan); }
+
+/* Footer, dialog, forms */
+footer { background: var(--bg-2); border-top-color: var(--line); }
+dialog { background: var(--bg-2); color: var(--ink); border: 1px solid var(--line-2); }
+.dlg-head .close { color: var(--ink); }
+.field input, .field textarea { background: var(--bg); color: var(--ink); border-color: var(--line-2); }
+.copybox { background: var(--bg); border-color: var(--line); }
+.draft-banner { background: var(--red-fill); }
+
+@media (prefers-reduced-motion: reduce) { .btn-primary, .pin.is-available { background: var(--red-fill); box-shadow: none; } }
+
+/* Relume Header 109: resting layout is the end state (framed video card, copy below). GSAP scrubs from a
+   full-screen video into this state, so without GSAP or with reduced motion the page still reads well. */
+.h109-stage { min-height: calc(100vh - 64px); display: flex; flex-direction: column; align-items: center; gap: 28px; padding-block: 20px 48px; overflow: hidden; }
+.h109-media { position: relative; width: min(1120px, calc(100% - 40px)); height: 50vh; min-height: 300px; border-radius: 22px; overflow: hidden; background: #000; box-shadow: 0 0 0 1px var(--line-2), 0 30px 80px rgba(0, 0, 0, .6), 0 0 60px rgba(255, 42, 61, .18); }
+.h109-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.h109-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7, 7, 11, .15) 0%, rgba(7, 7, 11, .35) 45%, rgba(7, 7, 11, .85) 100%); }
+.h109-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 0 clamp(20px, 4vw, 48px) clamp(20px, 4vw, 40px); display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.h109-overlay h1 { max-width: 16ch; font-size: clamp(34px, 6vw, 72px); text-shadow: 0 2px 24px rgba(0, 0, 0, .7), 0 0 28px rgba(255, 42, 61, .45); }
+.h109-toggle { position: absolute; top: 14px; right: 14px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .35); background: rgba(7, 7, 11, .55); color: #fff; font: 600 13px var(--font-body); cursor: pointer; backdrop-filter: blur(6px); }
+.h109-toggle:hover { border-color: var(--cyan); color: var(--cyan); }
+.h109-content { display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; }
+.h109-content .lede { text-align: center; }
+@media (max-width: 720px) {
+  .h109-media { width: calc(100% - 24px); height: 58vh; border-radius: 16px; }
+}
+
+/* Review fixes, 2026-10-19 */
+/* 1. Calmer price table: one quiet Claim per row, red only on intent. */
+table.spots .btn-primary { background: transparent; color: var(--ink); border-color: var(--line-2); box-shadow: none; }
+table.spots tr:hover .btn-primary, table.spots .btn-primary:focus-visible, table.spots tr.is-active .btn-primary { background: var(--red-fill); border-color: var(--red-fill); color: #fff; box-shadow: var(--glow-red); }
+table.spots .chip-open { color: var(--ink-2); background: transparent; border-color: var(--line-2); }
+table.spots .chip-open::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 8px var(--red); }
+table.spots td.right .price, table.spots td .price { color: var(--ink); }
+
+/* 2. Night-grade photos so they sit in one scene. */
+.kit-card img, .photos img, .spec img, .stage-fallback { filter: saturate(.85) contrast(1.08) brightness(.82); }
+.kit-card, .photos, .spec { position: relative; }
+.kit-card::after { content: ''; position: absolute; left: 0; right: 0; top: 0; aspect-ratio: 4 / 3; background: linear-gradient(180deg, rgba(7, 7, 11, 0) 40%, rgba(15, 16, 24, .9) 100%), linear-gradient(135deg, rgba(255, 42, 61, .12), rgba(34, 228, 255, .06)); pointer-events: none; }
+
+/* 3. Section rhythm: alternate bands and a racing line between sections. */
+.section + .section { border-top: 0; }
+.section { position: relative; }
+.section:nth-of-type(even) { background: linear-gradient(180deg, rgba(255, 255, 255, .025), rgba(255, 255, 255, .012)); }
+.section::before { content: ''; position: absolute; top: 0; left: 50%; width: min(1120px, calc(100% - 40px)); height: 1px; transform: translateX(-50%); background: linear-gradient(90deg, transparent, var(--red) 25%, var(--cyan) 75%, transparent); opacity: .55; }
+
+/* 4. FAQ side card. */
+.faq-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; align-items: start; }
+.faq-layout .faq { max-width: none; }
+.faq-card { position: sticky; top: 96px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: var(--radius); padding: 26px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 0 40px rgba(255, 42, 61, .08); }
+.faq-card h3 { font-size: 24px; }
+.faq-card p { color: var(--ink-2); font-size: 16px; }
+.faq-card .btn { align-self: flex-start; margin-top: 6px; }
+@media (max-width: 860px) { .faq-layout { grid-template-columns: 1fr; } .faq-card { position: static; } }

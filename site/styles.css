@@ -62,7 +62,8 @@ button { font: inherit; color: inherit; }
 .btn-dark:hover { background: #000; }
 .btn-ghost { background: transparent; border-color: var(--line-2); color: var(--ink); }
 .btn-ghost:hover { background: var(--bg-2); }
-.btn-sm { padding: 8px 14px; font-size: 15px; }
+.btn-sm { padding: 8px 14px; font-size: 15px; min-height: 44px; }
+.btn { min-height: 44px; }
 
 /* Nav */
 .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: rgba(255, 255, 255, .86); backdrop-filter: saturate(160%) blur(12px); -webkit-backdrop-filter: saturate(160%) blur(12px); border-bottom: 1px solid var(--line); }
@@ -71,13 +72,20 @@ button { font: inherit; color: inherit; }
 .brand img { height: 30px; width: auto; }
 .brand span { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: .02em; }
 .nav-links { display: flex; gap: 22px; margin-left: 12px; }
-.nav-links a { text-decoration: none; color: var(--ink-2); font-weight: 500; font-size: 15px; }
+.nav-links a { text-decoration: none; color: var(--ink-2); font-weight: 500; font-size: 15px; display: inline-flex; align-items: center; min-height: 44px; }
 .nav-links a:hover { color: var(--ink); }
 .nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 .seg { display: inline-flex; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
-.seg button { border: 0; background: transparent; padding: 5px 11px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; }
+.seg button { border: 0; background: transparent; padding: 8px 12px; min-height: 38px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
-@media (max-width: 760px) { .nav-links { display: none; } .nav-inner { height: 58px; } }
+/* Phones: the section links stay available as a scrollable row under the bar instead of disappearing. */
+@media (max-width: 760px) {
+  .nav-inner { height: auto; min-height: 58px; flex-wrap: wrap; row-gap: 0; padding-top: 6px; }
+  .brand { order: 1; } .nav-right { order: 2; }
+  .nav-links { order: 3; width: 100%; margin-left: 0; gap: 18px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a { white-space: nowrap; min-height: 44px; }
+}
 
 /* Hero */
 .hero { padding-block: 72px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 22px; }
@@ -121,7 +129,7 @@ button { font: inherit; color: inherit; }
 .dot-red { background: var(--red); } .dot-ink { background: var(--ink); }
 
 /* Popover */
-.pop { position: absolute; z-index: 40; width: 250px; background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 12px 14px; font-size: 14px; display: none; }
+.pop { position: absolute; z-index: 40; width: 250px; background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 12px 14px; font-size: 14px; display: none; }
 .pop.is-open { display: block; }
 .pop b { font-family: var(--font-display); font-size: 17px; }
 .pop .pop-price { font-family: var(--font-display); font-weight: 700; font-size: 18px; margin-top: 4px; }
@@ -227,7 +235,8 @@ table.spots td.right { text-align: right; }
 footer { border-top: 1px solid var(--line); background: var(--bg-2); padding-block: 40px; font-size: 14px; color: var(--muted); }
 .foot { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 .foot-links { display: flex; gap: 16px; flex-wrap: wrap; }
-.foot a { color: var(--ink-2); text-decoration: none; }
+.foot a { color: var(--ink-2); text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
+.brand { min-height: 44px; }
 .foot a:hover { text-decoration: underline; }
 .credits { margin-top: 18px; max-width: 80ch; font-size: 13px; line-height: 1.5; }
 
@@ -237,7 +246,7 @@ dialog::backdrop { background: rgba(17, 17, 20, .45); backdrop-filter: blur(3px)
 .dlg { padding: 26px 26px 22px; display: flex; flex-direction: column; gap: 14px; }
 .dlg-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .dlg-head h3 { font-size: 24px; }
-.dlg-head .close { border: 0; background: var(--bg-2); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+.dlg-head .close { border: 0; background: transparent; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
 .dlg-sub { color: var(--muted); font-size: 15px; margin-top: 2px; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field label { font-size: 14px; font-weight: 600; }

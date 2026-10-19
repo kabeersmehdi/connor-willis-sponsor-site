@@ -1,16 +1,27 @@
 // Back Connor Willis: page logic and the 3D car.
 // Everything content-related comes from config.json. Three.js is loaded from the import map in index.html.
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+// three.js is loaded on demand in main(), after the page content has rendered, so a blocked or slow CDN
+// (ad blocker, corporate network, outage) costs only the 3D car, never the prices, partners and footer.
+let THREE, OrbitControls, GLTFLoader, DRACOLoader, RGBELoader, DecalGeometry, RoomEnvironment;
+async function loadThree() {
+  const [core, orbit, gltf, draco, rgbe, decal, room] = await Promise.all([
+    import('three'),
+    import('three/addons/controls/OrbitControls.js'),
+    import('three/addons/loaders/GLTFLoader.js'),
+    import('three/addons/loaders/DRACOLoader.js'),
+    import('three/addons/loaders/RGBELoader.js'),
+    import('three/addons/geometries/DecalGeometry.js'),
+    import('three/addons/environments/RoomEnvironment.js'),
+  ]);
+  THREE = core;
+  ({ OrbitControls } = orbit); ({ GLTFLoader } = gltf); ({ DRACOLoader } = draco);
+  ({ RGBELoader } = rgbe); ({ DecalGeometry } = decal); ({ RoomEnvironment } = room);
+}
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const params = new URLSearchParams(location.search);
+const REDUCE_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (params.has('embed')) document.body.classList.add('embed');
 const DEBUG = params.has('debug');
 const POLAR = 1.2; // fixed camera elevation: the car only spins around its vertical axis
@@ -416,7 +427,7 @@ function initThree() {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(26, 1, 0.1, 200);
   const controls = new OrbitControls(camera, canvas);
-  Object.assign(controls, { enablePan: false, enableZoom: false, enableDamping: true, dampingFactor: 0.07, rotateSpeed: 0.55, autoRotate: !params.has('still'), autoRotateSpeed: 0.45 });
+  Object.assign(controls, { enablePan: false, enableZoom: false, enableDamping: true, dampingFactor: 0.07, rotateSpeed: 0.55, autoRotate: !params.has('still') && !REDUCE_MOTION, autoRotateSpeed: 0.45 });
   controls.minPolarAngle = POLAR; controls.maxPolarAngle = POLAR;
   canvas.style.touchAction = 'pan-y';
 
@@ -478,7 +489,7 @@ function initThree() {
   // auto-rotate pauses while the user drags, resumes after a pause
   let idleTimer = null;
   controls.addEventListener('start', () => { controls.autoRotate = false; clearTimeout(idleTimer); hidePop(); });
-  controls.addEventListener('end', () => { clearTimeout(idleTimer); idleTimer = setTimeout(() => { if (!params.has('still')) controls.autoRotate = true; }, 5000); });
+  controls.addEventListener('end', () => { clearTimeout(idleTimer); idleTimer = setTimeout(() => { if (!params.has('still') && !REDUCE_MOTION) controls.autoRotate = true; }, 5000); });
 
   let frame = 0;
   const loop = () => {
@@ -555,9 +566,10 @@ function onModel(T, gltf) {
   buildDecals(T).catch((e) => { if (DEBUG) console.error(e); });
 }
 
-const _v = new THREE.Vector3(), _d = new THREE.Vector3();
+let _v, _d;
 function updatePins(T) {
   if (!state.spotObjs.size) return;
+  if (!_v) { _v = new THREE.Vector3(); _d = new THREE.Vector3(); }
   const { camera, size } = T;
   const showSpots = state.view === 'spots';
   camera.updateMatrixWorld();
@@ -582,7 +594,11 @@ async function main() {
   state.cfg = await res.json();
   try { const c = localStorage.getItem('cwr-currency'); if (c === 'GBP' || c === 'USD') state.currency = c; } catch (e) { /* ignore */ }
   $$('[data-cur]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cur === state.currency)));
+  if (document.documentElement.classList.contains('theme-night')) {
+    await import('./theme-night.js').then((m) => m.buildHeader109()).catch((e) => console.warn('night hero off:', e));
+  }
   renderAll();
+  import('./motion.js').then((m) => m.initMotion()).catch((e) => console.warn('motion off:', e));
 
   document.addEventListener('click', (e) => {
     const claim = e.target.closest('[data-claim]');
@@ -605,7 +621,14 @@ async function main() {
   dialog.addEventListener('click', (e) => { if (e.target === dialog) closeClaim(); });
   dialog.addEventListener('close', () => { state.claimSpot = null; });
 
-  if (DEBUG) { window.__cwr = state; window.__THREE = THREE; }
+  if (DEBUG) window.__cwr = state;
+  try {
+    await loadThree();
+  } catch (e) {
+    fallbackStage('three.js did not load: ' + e);
+    return;
+  }
+  if (DEBUG) window.__THREE = THREE;
   initThree();
 }
 main().catch((e) => { console.error(e); fallbackStage(String(e)); });
