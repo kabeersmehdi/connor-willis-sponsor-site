@@ -594,6 +594,9 @@ async function main() {
   state.cfg = await res.json();
   try { const c = localStorage.getItem('cwr-currency'); if (c === 'GBP' || c === 'USD') state.currency = c; } catch (e) { /* ignore */ }
   $$('[data-cur]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cur === state.currency)));
+  if (document.documentElement.classList.contains('theme-night')) {
+    await import('./theme-night.js').then((m) => m.buildHeader109()).catch((e) => console.warn('night hero off:', e));
+  }
   renderAll();
   import('./motion.js').then((m) => m.initMotion()).catch((e) => console.warn('motion off:', e));
 
