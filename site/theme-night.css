@@ -1,0 +1,100 @@
+/* Mockup 2, "Neon night race". Loaded only with ?theme=night, on top of styles.css. */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&display=swap');
+
+:root {
+  --bg: #07070b;
+  --bg-2: #0f1018;
+  --bg-3: #1b1c28;
+  --ink: #f2f3f7;
+  --ink-2: #c4c6d2;
+  --muted: #9093a6;
+  --line: #22243a;
+  --line-2: #33365a;
+  --red: #ff2a3d;
+  --red-2: #ff5a69;
+  --red-soft: #2a0c13;
+  --red-fill: #d6102a;
+  --cyan: #22e4ff;
+  --glow-red: 0 0 18px rgba(255, 42, 61, .55);
+  --glow-cyan: 0 0 18px rgba(34, 228, 255, .45);
+  --shadow: 0 0 0 1px var(--line), 0 18px 40px rgba(0, 0, 0, .5);
+  --font-display: 'Chakra Petch', 'Barlow Semi Condensed', system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(900px 500px at 15% -10%, rgba(255, 42, 61, .16), transparent 60%),
+    radial-gradient(800px 500px at 100% 10%, rgba(34, 228, 255, .10), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+}
+:focus-visible { outline-color: var(--cyan); }
+
+h1, h2 { text-transform: uppercase; letter-spacing: .01em; }
+.hero h1 { text-shadow: 0 0 28px rgba(255, 42, 61, .45); }
+.eyebrow { color: var(--cyan); text-shadow: var(--glow-cyan); }
+
+/* Buttons */
+.btn-primary { background: var(--red-fill); box-shadow: var(--glow-red); }
+.btn-primary:hover { background: #b80d22; }
+.btn-dark { background: transparent; color: var(--cyan); border-color: var(--cyan); box-shadow: inset 0 0 10px rgba(34, 228, 255, .25), var(--glow-cyan); }
+.btn-dark:hover { background: rgba(34, 228, 255, .12); }
+.btn-ghost { border-color: var(--line-2); color: var(--ink); }
+.btn-ghost:hover { background: var(--bg-3); }
+
+/* Nav */
+.nav { background: rgba(7, 7, 11, .78); border-bottom-color: var(--line); }
+.brand img { filter: invert(1) hue-rotate(180deg) brightness(1.1); }
+.seg { background: var(--bg-2); border-color: var(--line-2); }
+.seg button[aria-pressed="true"] { background: var(--cyan); color: #04121a; box-shadow: var(--glow-cyan); }
+
+/* Funding */
+.funding-raised { text-shadow: var(--glow-red); }
+.bar { background: var(--bg-3); }
+.bar > i { background: linear-gradient(90deg, var(--red), var(--cyan)); box-shadow: 0 0 14px rgba(34, 228, 255, .6); }
+
+/* Stage */
+.stage { background: radial-gradient(120% 90% at 50% 35%, #1a1b2a 0%, #0d0e16 55%, #050508 100%); border-color: var(--line-2); box-shadow: inset 0 -60px 120px rgba(255, 42, 61, .10), 0 0 0 1px rgba(34, 228, 255, .08); }
+.stage-floor { background: radial-gradient(50% 50% at 50% 50%, rgba(34, 228, 255, .22), rgba(34, 228, 255, 0) 70%); }
+.stage-loading { background: rgba(7, 7, 11, .6); }
+.pin { border-color: #07070b; }
+.pin.is-available { background: var(--red-fill); box-shadow: 0 0 0 2px rgba(255, 42, 61, .35), var(--glow-red); }
+.pin.is-taken { background: var(--bg-3); border-color: var(--line-2); }
+.dot-ink { background: var(--bg-3); box-shadow: 0 0 0 1px var(--line-2); }
+.pop { background: var(--bg-2); border-color: var(--line-2); }
+
+/* Cards and panels */
+.kit-card, .step, .table-wrap { background: var(--bg-2); border-color: var(--line); }
+.kit-card:hover, .step:hover { border-color: var(--line-2); box-shadow: 0 0 0 1px rgba(255, 42, 61, .25), 0 12px 30px rgba(0, 0, 0, .45); }
+.step::before { background: var(--red-fill); box-shadow: var(--glow-red); }
+.spec { background: var(--bg-2); border-color: var(--line); }
+.price { color: var(--ink); }
+
+/* Table */
+table.spots th { background: var(--bg-3); color: var(--muted); }
+table.spots td.num { color: var(--cyan); }
+table.spots tr:hover td { background: rgba(255, 255, 255, .02); }
+.chip-size { background: transparent; color: var(--ink-2); border-color: var(--line-2); }
+.chip-open { color: #ff8a95; background: var(--red-soft); border-color: rgba(255, 42, 61, .45); }
+.chip-taken { background: var(--bg-3); color: var(--ink-2); border-color: var(--line-2); }
+
+/* Bio, timeline, stats */
+.about-text .quote { border-left-color: var(--cyan); }
+.timeline li.now { border-top-color: var(--red); box-shadow: 0 -6px 14px -8px rgba(255, 42, 61, .9); }
+.stat b { color: var(--ink); }
+
+/* Partners: logos are dark artwork, so they sit on light plates */
+.partners img { background: #f2f3f7; padding: 8px 12px; border-radius: 10px; height: 60px; }
+.partners .you { border-color: var(--line-2); }
+.partners .you:hover { color: var(--cyan); border-color: var(--cyan); }
+
+/* Footer, dialog, forms */
+footer { background: var(--bg-2); border-top-color: var(--line); }
+dialog { background: var(--bg-2); color: var(--ink); border: 1px solid var(--line-2); }
+.dlg-head .close { color: var(--ink); }
+.field input, .field textarea { background: var(--bg); color: var(--ink); border-color: var(--line-2); }
+.copybox { background: var(--bg); border-color: var(--line); }
+.draft-banner { background: var(--red-fill); }
+
+@media (prefers-reduced-motion: reduce) { .btn-primary, .pin.is-available { background: var(--red-fill); box-shadow: none; } }
