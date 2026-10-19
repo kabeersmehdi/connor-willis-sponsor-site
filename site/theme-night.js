@@ -1,7 +1,20 @@
 // Mockup 2 hero: Relume Header 109 layout (full-screen video that shrinks into a framed card as you
 // scroll, copy below it), rebuilt without React. The existing hero content is moved in, not copied,
 // so every id the page script fills stays unique.
+function buildFaqCard() {
+  const faq = document.querySelector('#faq .faq');
+  if (!faq || document.querySelector('.faq-card')) return;
+  const layout = document.createElement('div');
+  layout.className = 'faq-layout';
+  faq.replaceWith(layout);
+  const card = document.createElement('aside');
+  card.className = 'faq-card';
+  card.innerHTML = '<p class="eyebrow">Still deciding?</p><h3>Ask Connor\'s team directly.</h3><p>Pick a spot and add your question in the message box. The team replies with answers and a simple agreement. Nothing is charged on this page.</p><a class="btn btn-primary" href="#spots">Pick a spot</a>';
+  layout.append(faq, card);
+}
+
 export function buildHeader109() {
+  buildFaqCard();
   const hero = document.querySelector('main > .hero');
   if (!hero || document.querySelector('.h109')) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;

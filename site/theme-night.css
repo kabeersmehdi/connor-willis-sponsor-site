@@ -114,3 +114,31 @@ dialog { background: var(--bg-2); color: var(--ink); border: 1px solid var(--lin
 @media (max-width: 720px) {
   .h109-media { width: calc(100% - 24px); height: 58vh; border-radius: 16px; }
 }
+
+/* Review fixes, 2026-10-19 */
+/* 1. Calmer price table: one quiet Claim per row, red only on intent. */
+table.spots .btn-primary { background: transparent; color: var(--ink); border-color: var(--line-2); box-shadow: none; }
+table.spots tr:hover .btn-primary, table.spots .btn-primary:focus-visible, table.spots tr.is-active .btn-primary { background: var(--red-fill); border-color: var(--red-fill); color: #fff; box-shadow: var(--glow-red); }
+table.spots .chip-open { color: var(--ink-2); background: transparent; border-color: var(--line-2); }
+table.spots .chip-open::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 8px var(--red); }
+table.spots td.right .price, table.spots td .price { color: var(--ink); }
+
+/* 2. Night-grade photos so they sit in one scene. */
+.kit-card img, .photos img, .spec img, .stage-fallback { filter: saturate(.85) contrast(1.08) brightness(.82); }
+.kit-card, .photos, .spec { position: relative; }
+.kit-card::after { content: ''; position: absolute; left: 0; right: 0; top: 0; aspect-ratio: 4 / 3; background: linear-gradient(180deg, rgba(7, 7, 11, 0) 40%, rgba(15, 16, 24, .9) 100%), linear-gradient(135deg, rgba(255, 42, 61, .12), rgba(34, 228, 255, .06)); pointer-events: none; }
+
+/* 3. Section rhythm: alternate bands and a racing line between sections. */
+.section + .section { border-top: 0; }
+.section { position: relative; }
+.section:nth-of-type(even) { background: linear-gradient(180deg, rgba(255, 255, 255, .025), rgba(255, 255, 255, .012)); }
+.section::before { content: ''; position: absolute; top: 0; left: 50%; width: min(1120px, calc(100% - 40px)); height: 1px; transform: translateX(-50%); background: linear-gradient(90deg, transparent, var(--red) 25%, var(--cyan) 75%, transparent); opacity: .55; }
+
+/* 4. FAQ side card. */
+.faq-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; align-items: start; }
+.faq-layout .faq { max-width: none; }
+.faq-card { position: sticky; top: 96px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: var(--radius); padding: 26px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 0 40px rgba(255, 42, 61, .08); }
+.faq-card h3 { font-size: 24px; }
+.faq-card p { color: var(--ink-2); font-size: 16px; }
+.faq-card .btn { align-self: flex-start; margin-top: 6px; }
+@media (max-width: 860px) { .faq-layout { grid-template-columns: 1fr; } .faq-card { position: static; } }
